@@ -1,21 +1,25 @@
+import { envs } from '../src/config/envs';
+import { Server } from '../src/presentation/server';
+
+jest.mock('../src/presentation/server');
 
 
-describe('Test in the App file', () => {
-    // Dentro del bloque describe, comienza una prueba individual definida con test. 
-    // El texto 'should be 30' esta indicando lo que se espera que ocurra.
-        test('Should be 30', () => {
-    
-            // 1. Arrange
-            // Se establecen los valores iniciales y se prepara el entorno necesario para la prueba. 
-            const value = 10;
-                    
-            // 2. Act
-            // Se ejecuta el código que se está probando. 
-            const result = value + 20;
-    
-            // 3. Assert
-            // Se verifica si el resultado de la acción coincide con lo esperado. 
-            expect(result).toBe(30);
-            
-        })
-    })
+describe('should call server with arguments and start', () => {
+
+
+    test('should work', async () => {
+
+        await import('../src/app');
+
+        expect(Server).toHaveBeenCalledTimes(1);
+        expect(Server).toHaveBeenCalledWith({
+            port: envs.PORT,
+            public_path: envs.PUBLIC_PATH,
+            routes: expect.any(Function),
+        });
+
+        expect(Server.prototype.start).toHaveBeenCalledWith();
+
+    });
+
+});
